@@ -39,6 +39,12 @@ public class MyTypedClient : IMyTypedClient
 
     public async Task MakeRequest()
     {
-        await _httpClient.GetAsync("https://www.mythingthatdoesnotexist.com");
+        await _httpClient.GetAsync("/hello-world");
+    }
+
+    public async Task<HttpResponseMessage> TakeIsValid()
+    {
+        var validacao = await _httpClient.GetAsync("/validation");
+        return validacao;
     }
 }
