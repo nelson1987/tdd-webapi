@@ -67,10 +67,6 @@ public class FakeHttpClientFactoryWhereTypedClientTwoWillFail : IHttpClientFacto
         };
     }
 }
-public interface IMyTypedClient
-{
-    Task MakeRequest();
-}
 public class FakeHttpClientFactory : IHttpClientFactory
 {
     public HttpClient CreateClient(string name)
