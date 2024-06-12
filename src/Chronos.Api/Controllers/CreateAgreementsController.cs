@@ -6,10 +6,10 @@ namespace Chronos.Api.Controllers;
 [Route("[controller]")]
 public class CreateAgreementsController : ControllerBase
 {
-    private readonly IHttpClientFactory _logger;
+    private readonly IHttpValidationClientFactory _logger;
     private readonly IMovimentacaoRepository _repository;
     private readonly ICreateAgreementPublisher _publisher;
-    public CreateAgreementsController(IHttpClientFactory logger,
+    public CreateAgreementsController(IHttpValidationClientFactory logger,
         IMovimentacaoRepository repository,
         ICreateAgreementPublisher publisher)
     {
@@ -37,7 +37,7 @@ public class CreateAgreementsController : ControllerBase
 public record CreateAgreementCommand(string Email, decimal Valor);
 public record CreateAgreementEvent(string Email, decimal Valor);
 
-public interface IHttpClientFactory
+public interface IHttpValidationClientFactory
 {
     Task<bool> Validar(string contaDebitante);
 }
