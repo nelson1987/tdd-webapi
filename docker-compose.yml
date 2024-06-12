@@ -3,14 +3,19 @@ services:
     image: postgres:10.6-alpine
     restart: always
     shm_size: 128mb
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    env_file:
+      - .env
     volumes:
       - ./docker/scripts:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
-  ####host.docker.internal
+
+  cache:
+    image: redis
+    command: redis-server --requirepass Redis2019!
+    ports:
+      - 6379:6379
+    
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -20,3 +25,4 @@ services:
       - "16543:80"
     depends_on:
       - postgres
+      

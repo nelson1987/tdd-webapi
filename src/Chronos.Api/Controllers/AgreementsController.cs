@@ -1,6 +1,11 @@
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Chronos.Api.Controllers;
+
 [ApiController]
 [Route("[controller]")]
 public class AgreementsController : ControllerBase
@@ -12,11 +17,15 @@ public class AgreementsController : ControllerBase
 
     private readonly ILogger<AgreementsController> _logger;
     private readonly IMyTypedClient _myTypedClient;
+    private readonly IDistributedCache _cache;
 
-    public AgreementsController(ILogger<AgreementsController> logger, IMyTypedClient myTypedClient)
+    public AgreementsController(ILogger<AgreementsController> logger,
+        IMyTypedClient myTypedClient,
+        IDistributedCache cache)
     {
         _logger = logger;
         _myTypedClient = myTypedClient;
+        _cache = cache;
     }
 
     [HttpGet(Name = "GetAgreements")]
@@ -30,6 +39,27 @@ public class AgreementsController : ControllerBase
             Summaries[Random.Shared.Next(Summaries.Length)]))
         .ToArray();
     }
+
+    [HttpGet("id", Name = "GetRedisCache")]
+    public async Task<IActionResult> GetRedisCache(int id, CancellationToken cancellationToken = default)
+    {
+        return Ok(await GetProduto(id, cancellationToken));
+    }
+
+    private async Task<string[]> GetProduto(int id, CancellationToken cancellationToken = default)
+    {
+
+        string redisKey = $"Get_Produto_{id}";
+        var responseBytes = await _cache.GetStringAsync(redisKey, cancellationToken);
+        if (responseBytes == null)
+        {
+            string[] produto = new[] { $"ABRE{id}", $"FECHA{id}" };
+            await _cache.SetStringAsync(redisKey, System.Text.Json.JsonSerializer.Serialize(produto), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2) }, cancellationToken);
+            return produto;
+        }
+        return System.Text.Json.JsonSerializer.Deserialize<string[]>(responseBytes, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))!;
+    }
+
     [HttpPost]
     public async Task<IEnumerable<ListAgreementResponse>?> Post()
     {

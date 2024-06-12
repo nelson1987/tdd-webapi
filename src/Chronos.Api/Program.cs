@@ -1,7 +1,11 @@
+using Chronos.Api.Features;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddHttpClient<IMyTypedClient, MyTypedClient>();
+builder.Services.AddRedisCache(builder.Configuration);
+//builder.Services.AddCache();
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

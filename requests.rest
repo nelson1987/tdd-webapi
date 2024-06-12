@@ -1,0 +1,10 @@
+GET https://localhost:7200/Agreements/id?id=1
+accept: */*
+
+###
+GET https://localhost:7200/Agreements/id?id=2
+accept: */*
+
+###
+GET https://localhost:7200/Agreements/id?id=3
+accept: */*
