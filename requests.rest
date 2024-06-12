@@ -8,3 +8,7 @@ accept: */*
 ###
 GET https://localhost:7200/Agreements/id?id=3
 accept: */*
+
+###
+GET https://localhost:7200/state
+accept: */*

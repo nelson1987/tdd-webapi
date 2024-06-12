@@ -25,7 +25,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.AddRedisHealthCheck();
 app.Run();
 
 public partial class Program { }
