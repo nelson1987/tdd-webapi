@@ -12,6 +12,7 @@ using Testcontainers.SqlEdge;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Chronos.Tests;
 public class IntegrationTests : IAsyncLifetime
@@ -70,6 +71,25 @@ public class HttpClientFactoryIntegrationTests : IntegrationTests, IClassFixture
     {
         _fixture = fixture;
         _client = fixture.CreateClient();
+    }
+
+    [Fact]
+    public async Task TestingGetRedisCache()
+    {
+        //Arrange
+        int id = 1;
+        string[] produto = new[] { $"ABRE{id}", $"FECHA{id}" };
+        //Act
+        var result = await _client.GetAsync($"Agreements/{id}");
+        result.EnsureSuccessStatusCode();
+
+        var resultJson = await result.Content.ReadAsStringAsync();
+        string[] response = System.Text.Json.JsonSerializer.Deserialize<string[]>(resultJson,
+            new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))!;
+        //Assert
+        Assert.True(result.IsSuccessStatusCode);
+        Assert.Equal(response, produto);
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
     }
 
     [Fact]

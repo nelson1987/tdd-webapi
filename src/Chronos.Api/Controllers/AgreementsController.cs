@@ -40,7 +40,7 @@ public class AgreementsController : ControllerBase
         .ToArray();
     }
 
-    [HttpGet("id", Name = "GetRedisCache")]
+    [HttpGet("{id}", Name = "GetRedisCache")]
     public async Task<IActionResult> GetRedisCache(int id, CancellationToken cancellationToken = default)
     {
         return Ok(await GetProduto(id, cancellationToken));
@@ -59,12 +59,6 @@ public class AgreementsController : ControllerBase
         }
         return System.Text.Json.JsonSerializer.Deserialize<string[]>(responseBytes, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))!;
     }
-
-    [HttpPost]
-    public async Task<IEnumerable<ListAgreementResponse>?> Post()
-    {
-        await _myTypedClient.MakeRequest();
-        return null;
-    }
 }
+
 public record ListAgreementResponse(DateOnly Date, int TemperatureC, string Summary);
