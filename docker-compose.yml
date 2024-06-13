@@ -1,4 +1,11 @@
 services:
+  web:
+    build: src/Chronos.Api
+    ports:
+      - 8089:8080
+    depends_on: 
+      - cache
+
   postgres:
     image: postgres:10.6-alpine
     restart: always
@@ -16,13 +23,28 @@ services:
     ports:
       - 6379:6379
     
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "teste@email.com.br"
-      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
-    ports:
-      - "16543:80"
-    depends_on:
-      - postgres
-      
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "teste@email.com.br"
+  #     PGADMIN_DEFAULT_PASSWORD: "PgAdmin2019!"
+  #   ports:
+  #     - "16543:80"
+  #   depends_on:
+  #     - postgres
+  
+  # db:
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     SA_PASSWORD: example_123
+  #   # mssql server image isn't available for arm64 architecture, so we use azure-sql instead
+  #   image: mcr.microsoft.com/azure-sql-edge:1.0.4
+  #   # If you really want to use MS SQL Server, uncomment the following line
+  #   #image: mcr.microsoft.com/mssql/server
+  #   restart: always
+  #   healthcheck:
+  #       test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P example_123 -Q 'SELECT 1' || exit 1"]
+  #       interval: 10s
+  #       retries: 10
+  #       start_period: 10s
+  #       timeout: 3s   

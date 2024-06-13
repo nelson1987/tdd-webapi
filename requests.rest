@@ -1,12 +1,12 @@
-GET https://localhost:7200/Agreements/id?id=1
+GET http://localhost:8089/Agreements/1
 accept: */*
 
 ###
-GET https://localhost:7200/Agreements/id?id=2
+GET http://localhost:8089/Agreements/2
 accept: */*
 
 ###
-GET https://localhost:7200/Agreements/id?id=3
+GET http://localhost:8089/Agreements/3
 accept: */*
 
 ###

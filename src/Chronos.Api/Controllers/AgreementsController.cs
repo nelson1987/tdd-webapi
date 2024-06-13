@@ -34,7 +34,7 @@ public class AgreementsController : ControllerBase
         await _myTypedClient.MakeRequest();
 
         return Enumerable.Range(1, 5).Select(index => new ListAgreementResponse
-            (DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            (DateOnly.FromDateTime(DateTime.UtcNow.AddDays(index)),
             Random.Shared.Next(-20, 55),
             Summaries[Random.Shared.Next(Summaries.Length)]))
         .ToArray();
