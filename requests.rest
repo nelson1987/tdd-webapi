@@ -10,5 +10,5 @@ GET http://localhost:8089/Agreements/3
 accept: */*
 
 ###
-GET https://localhost:7200/state
+GET http://localhost:8089/redisState
 accept: */*

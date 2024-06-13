@@ -1,0 +1,6 @@
+@Phanes.Api_HostAddress = http://localhost:5128
+
+GET {{Phanes.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,3 +1,4 @@
+using Chronos.Api.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -12,9 +13,9 @@ using Testcontainers.SqlEdge;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Chronos.Tests;
+
 public class IntegrationTests : IAsyncLifetime
 {
     public static int PortServer = 9080;
@@ -43,16 +44,16 @@ public class IntegrationTests : IAsyncLifetime
 
     private void ValidacaoTransferenciaEndpoint()
     {
-        var response = new { IsValid = true };
+        var response = new IsValidCommand(true);
         Server.Given(
             Request.Create().WithPath("/validation").UsingGet()
-        )
-        .RespondWith(
-            Response.Create()
-                .WithStatusCode(200)
-                .WithHeader("Content-Type", "application/json")
-                .WithBody(System.Text.Json.JsonSerializer.Serialize(response))
-        );
+            )
+            .RespondWith(
+                Response.Create()
+                    .WithStatusCode(200)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBody(System.Text.Json.JsonSerializer.Serialize(response))
+            );
     }
 
     public Task DisposeAsync()

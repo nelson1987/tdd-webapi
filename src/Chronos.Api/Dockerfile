@@ -13,6 +13,4 @@ RUN dotnet publish "Chronos.Api.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-# EXPOSE 80 5195 7066
-# ENV ASPNETCORE_URLS=http://+:5195;https://+:7066
 ENTRYPOINT ["dotnet", "Chronos.Api.dll"]

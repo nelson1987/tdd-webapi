@@ -1,8 +1,13 @@
+using Chronos.Api.Controllers;
 using Chronos.Api.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IMyTypedClient, MyTypedClient>();
+builder.Services.AddHttpClient<IHttpValidationClientFactory, HttpValidationClientFactory>();
+builder.Services.AddScoped<IMovimentacaoRepository, MovimentacaoRepository>();
+builder.Services.AddScoped<ICreateAgreementPublisher, CreateAgreementPublisher>();
+
 builder.Services.AddRedisCache(builder.Configuration);
 //builder.Services.AddCache();
 // Add services to the container.
@@ -21,9 +26,7 @@ var app = builder.Build();
 //}
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 app.AddRedisHealthCheck();
 app.Run();
