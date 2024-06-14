@@ -23,6 +23,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireApp.Web", "AspireApp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireApp.Tests", "AspireApp\AspireApp.Tests\AspireApp.Tests.csproj", "{D1E6902A-7CB7-4BF9-A1E3-11A8C8EC1640}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VerticalSlice", "VerticalSlice", "{19F3D49B-A252-443D-A339-444C51C5E047}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertical", "Vertical\Vertical.csproj", "{4141E345-D7B8-47A6-B25C-DEC6275348BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,10 @@ Global
 		{D1E6902A-7CB7-4BF9-A1E3-11A8C8EC1640}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1E6902A-7CB7-4BF9-A1E3-11A8C8EC1640}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1E6902A-7CB7-4BF9-A1E3-11A8C8EC1640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4141E345-D7B8-47A6-B25C-DEC6275348BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4141E345-D7B8-47A6-B25C-DEC6275348BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4141E345-D7B8-47A6-B25C-DEC6275348BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4141E345-D7B8-47A6-B25C-DEC6275348BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,7 @@ Global
 		{7AC65D0B-C69B-4E8F-A0CF-844C1A2E5FAA} = {15301CAA-C04F-4BA0-8620-45069572E5C6}
 		{19FAAFBA-2F3B-49E3-AD86-A3C4056A1DCD} = {15301CAA-C04F-4BA0-8620-45069572E5C6}
 		{D1E6902A-7CB7-4BF9-A1E3-11A8C8EC1640} = {15301CAA-C04F-4BA0-8620-45069572E5C6}
+		{4141E345-D7B8-47A6-B25C-DEC6275348BF} = {19F3D49B-A252-443D-A339-444C51C5E047}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BFA2575E-B850-4DE4-882C-A4565368EF32}
