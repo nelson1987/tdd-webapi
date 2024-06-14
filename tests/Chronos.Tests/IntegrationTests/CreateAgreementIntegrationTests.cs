@@ -43,7 +43,7 @@ public class CreateAgreementIntegrationTests : IntegrationTests, IClassFixture<A
         Assert.Equal(201, (int)result.StatusCode);
     }
 }
-public class FakeHttpValidationClientFactory : IHttpValidationClientFactory, IHttpClientFactory
+public class FakeHttpValidationClientFactory : IValidationTitlesHttpClientFactory, IHttpClientFactory
 {
     public HttpClient CreateClient(string name)
     {

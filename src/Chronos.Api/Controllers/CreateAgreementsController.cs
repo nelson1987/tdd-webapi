@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Chronos.Api.Controllers;
 
@@ -7,10 +6,10 @@ namespace Chronos.Api.Controllers;
 [Route("[controller]")]
 public class CreateAgreementsController : ControllerBase
 {
-    private readonly IHttpValidationClientFactory _logger;
+    private readonly IValidationTitlesHttpClientFactory _logger;
     private readonly IMovimentacaoRepository _repository;
     private readonly ICreateAgreementPublisher _publisher;
-    public CreateAgreementsController(IHttpValidationClientFactory logger,
+    public CreateAgreementsController(IValidationTitlesHttpClientFactory logger,
         IMovimentacaoRepository repository,
         ICreateAgreementPublisher publisher)
     {
@@ -33,7 +32,7 @@ public record IsValidCommand(bool IsValid);
 public record CreateAgreementCommand(string Email, decimal Valor);
 public record CreateAgreementEvent(string Email, decimal Valor);
 
-public interface IHttpValidationClientFactory
+public interface IValidationTitlesHttpClientFactory
 {
     Task<bool> Validar(string contaDebitante, CancellationToken token = default);
 }
@@ -45,7 +44,7 @@ public interface ICreateAgreementPublisher
 {
     Task Enviar(CreateAgreementEvent evento, CancellationToken token = default);
 }
-public class HttpValidationClientFactory : IHttpValidationClientFactory
+public class HttpValidationClientFactory : IValidationTitlesHttpClientFactory
 {
     private readonly HttpClient _httpClient;
 

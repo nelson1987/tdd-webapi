@@ -1,16 +1,18 @@
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace Chronos.Api.Controllers;
 
 [ApiController]
-//[EnableRateLimiting("fixed-by-ip")]
 [Route("api/v1/[controller]")]
 [Produces("application/json")]
 [Consumes("application/json")]
+[EnableRateLimiting("fixed-by-ip")]
 public class TitlesController : ControllerBase
 {
     private readonly ITitlesRepository _repository;
+
     public TitlesController(ITitlesRepository repository)
     {
         _repository = repository;
@@ -40,9 +42,11 @@ public class TitlesController : ControllerBase
 
     //Post
     [HttpPost(Name = "PostTitles")]
-    public async Task<IActionResult> Post([FromBody] TitlesPostCommand command, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Post(
+        [FromServices] ITitlesAddHandler handler,
+        [FromBody] TitlesPostCommand command, CancellationToken cancellationToken = default)
     {
-        await _repository.Adicionar(new Titles() { Id = Guid.NewGuid(), Description = command.Description, Value = command.Value }, cancellationToken);
+        await handler.Handler(command, cancellationToken);
         return Created();
     }
 
@@ -63,15 +67,48 @@ public class TitlesController : ControllerBase
     }
 }
 
+public interface ITitlesAddHandler
+{
+    Task<Result> Handler(TitlesPostCommand command, CancellationToken cancellationToken = default);
+}
+
+public class TitlesAddHandler : ITitlesAddHandler
+{
+    private readonly ITitlesRepository _repository;
+    private readonly IValidationTitlesHttpClientFactory _httpClient;
+    private readonly ITitlesPublisher _publisher;
+
+    public TitlesAddHandler(ITitlesRepository repository, IValidationTitlesHttpClientFactory httpClient, ITitlesPublisher publisher)
+    {
+        _repository = repository;
+        _httpClient = httpClient;
+        _publisher = publisher;
+    }
+
+    public async Task<Result> Handler(TitlesPostCommand command, CancellationToken cancellationToken = default)
+    {
+        if (!await _httpClient.Validar(command.Description, cancellationToken)) return Result.Fail("Erro na validação");
+        var titulo = await _repository.Adicionar(new Titles() { Id = Guid.NewGuid(), Description = command.Description, Value = command.Value }, cancellationToken);
+        await _publisher.Enviar(new TitlesPostEvent(titulo.Id, titulo.Description, titulo.Value), cancellationToken);
+        return Result.Ok();
+    }
+}
+
+public interface ITitlesPublisher
+{
+    Task Enviar(TitlesPostEvent evento, CancellationToken token = default);
+}
+
 public interface ITitlesRepository
 {
     List<Titles> Titles { get; }
     Task<List<Titles>> GetAll(CancellationToken cancellationToken = default);
     Task<Titles?> GetById(Guid id, CancellationToken cancellationToken = default);
-    Task Adicionar(Titles titles, CancellationToken cancellationToken = default);
+    Task<Titles> Adicionar(Titles titles, CancellationToken cancellationToken = default);
     Task Alterar(Guid id, decimal valor, CancellationToken cancellationToken = default);
     Task Remover(Guid id, CancellationToken cancellationToken = default);
 }
+
 public class TitlesRepository : ITitlesRepository
 {
     public List<Titles> Titles { get; private set; }
@@ -82,10 +119,10 @@ public class TitlesRepository : ITitlesRepository
                 new Titles() { Id = Guid.Parse("32304383-22ff-4b41-bf42-1c376cd736db"), Description = "Description_2", Value = 20.00M }
             };
     }
-    public Task Adicionar(Titles titles, CancellationToken cancellationToken = default)
+    public Task<Titles> Adicionar(Titles titles, CancellationToken cancellationToken = default)
     {
         Titles.Add(titles);
-        return Task.CompletedTask;
+        return Task.FromResult(titles);
     }
 
     public Task<Titles?> GetById(Guid id, CancellationToken cancellationToken = default)
@@ -118,7 +155,7 @@ public class FakeTitlesRepositoryWithException : ITitlesRepository
 {
     public List<Titles> Titles => throw new NotImplementedException();
 
-    public Task Adicionar(Titles titles, CancellationToken cancellationToken = default)
+    public Task<Titles> Adicionar(Titles titles, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
@@ -149,6 +186,8 @@ public record TitlesQueryResponse(Guid Id, string Description, decimal Value);
 public record TitlesPostCommand(string Description, decimal Value);
 public record TitlesPutCommand(Guid Id, decimal Value);
 public record TitlesDeleteCommand();
+public record TitlesPostEvent(Guid Id, string Description, decimal Value);
+
 public class Titles
 {
     public Guid Id { get; set; }

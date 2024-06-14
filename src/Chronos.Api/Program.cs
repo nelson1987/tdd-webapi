@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<IMyTypedClient, MyTypedClient>();
-builder.Services.AddHttpClient<IHttpValidationClientFactory, HttpValidationClientFactory>();
+builder.Services.AddHttpClient<IValidationTitlesHttpClientFactory, HttpValidationClientFactory>();
 builder.Services.AddScoped<IMovimentacaoRepository, MovimentacaoRepository>();
 builder.Services.AddScoped<ICreateAgreementPublisher, CreateAgreementPublisher>();
 

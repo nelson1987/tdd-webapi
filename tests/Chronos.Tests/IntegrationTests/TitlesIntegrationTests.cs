@@ -20,6 +20,7 @@ public class TitlesIntegrationTests : IntegrationTests, IClassFixture<Applicatio
             b.ConfigureTestServices(services =>
             {
                 services.AddSingleton<ITitlesRepository, TitlesRepository>();
+                services.AddScoped<ITitlesAddHandler, TitlesAddHandler>();
             });
         }).CreateClient();
         _uri = "api/v1/Titles";
@@ -34,6 +35,7 @@ public class TitlesIntegrationTests : IntegrationTests, IClassFixture<Applicatio
             {
                 services.RemoveAll<ITitlesRepository>();
                 services.AddSingleton<ITitlesRepository, FakeTitlesRepositoryWithException>();
+                services.AddHttpClient<IValidationTitlesHttpClientFactory, HttpValidationClientFactory>();
             });
         }).CreateClient();
         //Act
