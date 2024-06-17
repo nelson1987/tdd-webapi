@@ -12,3 +12,11 @@ accept: */*
 ###
 GET http://localhost:8089/redisState
 accept: */*
+
+###
+GET https://localhost:7176/health
+accept: */*
+
+###
+GET https://localhost:7176/alive
+accept: */*

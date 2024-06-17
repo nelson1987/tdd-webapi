@@ -3,6 +3,8 @@ using Vertical.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 //*********************** Add services to the container.***********************
 //*********************** Add services to the container end.***********************
 
@@ -20,6 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
